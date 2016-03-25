@@ -1,0 +1,148 @@
+#facebox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1100;
+  text-align: left;
+}
+
+
+#facebox .popup{
+  position:relative;
+  border:2px solid #AAA;
+  -webkit-border-radius:5px;
+  -moz-border-radius:5px;
+  border-radius:5px;
+  -webkit-box-shadow:0 0 18px rgba(0,0,0,0.4);
+  -moz-box-shadow:0 0 18px rgba(0,0,0,0.4);
+  box-shadow:0 0 18px rgba(0,0,0,0.4);
+}
+
+#facebox .content {
+  display:table;
+  width: 370px;
+  padding: 10px;
+  background: #fff;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  border-radius:4px;
+}
+
+#facebox .content > p:first-child{
+  margin-top:0;
+}
+#facebox .content > p:last-child{
+  margin-bottom:0;
+}
+
+#facebox .close{
+  position:absolute;
+  top:5px;
+  right:5px;
+  padding:2px;
+  background:#fff;
+  opacity: 1.0 !important;
+}
+/*#facebox .close img{
+  opacity:1.0;
+}
+#facebox .close:hover img{
+  opacity:1.0;
+}*/
+
+#facebox .loading {
+  text-align: center;
+}
+
+#facebox .image {
+  text-align: center;
+}
+
+#facebox img {
+  border: 0;
+  margin: 0;
+}
+
+#facebox_overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height:100%;
+  width:100%;
+}
+
+.facebox_hide {
+  z-index:-100;
+}
+
+.facebox_overlayBG {
+  background-color: #000;
+  z-index: 1099;
+  opacity:0.3 !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.titleBar {
+  
+    height: 30px;
+    text-align: left;
+}
+
+.dragonControl .close.text {
+    color: #999999;
+    cursor: pointer;
+    float: right;
+    font-family: verdana,sans-serif;
+    font-size: 17px;
+    height: 30px;
+    line-height: 26px;
+    padding-right: 8px;
+    text-align: center;
+}
+
+.titleBar .title {
+    color: #66BB00;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 6px;
+}
+.dialog-content {
+    padding: 12px;
+}
+
+.f_textbox {
+    background-color: #F8F8F8;
+    border: 1px solid #71A9E7;
+    color: #000000;
+    width: 344px;
+}
+
+.f_textarea {
+    background-color: #F8F8F8;
+    border: 1px solid #71A9E7;
+    color: #000000;
+    height: 60px;
+    margin-top: 2px;
+    width: 344px;
+}
+
+.ui-blue {
+    background-color: #3366CC;
+    border-color: #3366CC;
+    text-shadow: 0 -1px 0 #333399;
+}

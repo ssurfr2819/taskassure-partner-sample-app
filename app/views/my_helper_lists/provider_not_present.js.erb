@@ -1,0 +1,23 @@
+jQuery('#provider_not_present').html("<%= escape_javascript(render(:partial => '/my_helper_lists/provider_not_present')) %>").hide().fadeIn('fast');
+var helpername = document.getElementById("helpername");
+helpername.value = "";
+
+var phone = document.getElementById("phone");
+phone.value = "";
+
+var address = document.getElementById("address");
+address.value = "";
+
+var city = document.getElementById("city");
+city.value = "";
+
+var state = document.getElementById("state");
+state.value = "";
+
+var zipcode = document.getElementById("zipcode");
+zipcode.value = "";
+
+var country = document.getElementById("country");
+country.value = "";
+
+jQuery("#photo").hide();

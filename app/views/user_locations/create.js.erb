@@ -1,0 +1,7 @@
+<% if @user_location.save %>
+
+  $(document).trigger('close.facebox')
+<% else %>
+  $('#facebox .content').html('<%= escape_javascript(render :template => 'user_locations/newpopup.html') %>')
+  $('#facebox form').data('remote','true');
+<% end %>

@@ -1,0 +1,25 @@
+<!--#
+# using form_tag method for new action and form_for method for edit action 
+#
+# due to issues with ActiveResource approach with standard form_for, we separate form for new and edit actions
+# according to dev community, should use Task.build in new action in order to 'get' task attributes
+# for use with form_for, but for us it resulted in error 'first field in form cannot be nil...'
+# 
+# WARNING: until a better technique is created, MUST maintain form_for and form_tag versions!!!
+# -->
+<div class="col-xs-12" >
+<% if @task %>  
+  <% if @task.valid_task == false %>
+    <% if @task.latitude.blank? || @task.longitude.blank? %>
+      <h3 style="color:red"> <%= Task::TASK_ALIAS %> address is incomplete or invalid!</h3>
+    <% end %>
+    <% if @task.provider_id.blank? %>
+	<h3 style="color:red"><%= Task::TASK_ALIAS %> not assigned!</h3>
+    <% end %>
+  <% end %>
+<% else %>
+	<h3 style="color:red"> No <%= Task::TASK_ALIAS.downcase %> is available. This <%= Task::TASK_ALIAS.downcase %> might have been deleted, or the system experienced an error.</h3>
+<% end %>
+</div>
+
+<%= render 'form' %>

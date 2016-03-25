@@ -1,0 +1,189 @@
+<%= stylesheet_link_tag "facebox.css" %>
+<%= javascript_include_tag "facebox" %>
+
+<%= form_for @my_helper_list, :html => {:class => 'form-horizontal'} do |f| %>
+  <% if @my_helper_list.errors.any? %>
+    <div id="error_explanation">
+      <h3><%= pluralize(@my_helper_list.errors.count, "error") %> prohibited this <%= MyHelperList::HELPER_ALIAS.downcase %> from being saved:</h3>
+      <ul>
+      <% @my_helper_list.errors.full_messages.each do |msg| %>
+        <li><%= replace_labels_using_env(msg) %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="col-xs-12">
+    <h3>My <%= MyHelperList::HELPER_ALIAS %> Profile</h3>
+  </div>
+  <% if params[:action] =="edit" %>
+    <div class="col-xs-12"><p><strong>The information in this section is maintained by the <%= MyHelperList::HELPER_ALIAS.downcase %>. You can only edit your ratings and comments.</strong></p></div>
+    <div class="clearfix">
+      <div class="col-xs-3" align="right"><strong><%= MyHelperList::HELPER_ALIAS %> Email:</strong>&nbsp;&nbsp;</div>
+      <div class="col-xs-9"><%= text_field_tag :provider_email , @my_helper_list.provider_user.email, :readonly => true, :class => 'form-control' %></div>
+    </div>
+  <% else %>
+    <div class="col-xs-12"><p><strong>To add a <%= MyHelperList::HELPER_ALIAS.downcase %>, enter the <%= MyHelperList::HELPER_ALIAS.downcase %>'s TaskAssure email address below, and then click Verify&nbsp;<%= MyHelperList::HELPER_ALIAS %> to check if that account exists to receive <%= Task::TASK_ALIAS %> assignments. If no such account exists, you will be able to create one for the user.</strong></p></div>
+    <div class="clearfix">
+      <div class="col-xs-3" align="right"><strong><%= MyHelperList::HELPER_ALIAS %> Email:</strong></div>
+      <div class="col-xs-6"><%= text_field_tag :provider_email, "", :class => 'form-control' %></div>
+      <div class="col-xs-3"><%= link_to image_tag("images.jpg", :width => 32, :height => 32 ) + "Verify #{MyHelperList::HELPER_ALIAS}", 'javascript:void(0)',:id => "ck"%></div>
+    </div>
+    <div class="hidden"><!-- for this release we are inserting a my_helper_list_provider_email attribute for the create action -->
+      <%= f.text_field :provider_email %>
+    </div>
+  <% end %>
+
+  <div class="col-xs-12">
+    <div id="provider_not_present"></div>
+  </div>
+
+  <div id="provider_desc">
+  <% if !@my_helper_list.new_record? %> <!-- used by edit -->
+    <% p = @my_helper_list.provider_user %>
+    <div class="col-xs-3 col-sm-3" align="right"><strong>Name:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.name.blank? ? "Name not provided" : p.name %></div>
+    <%if p.image_thumb_url.present? %>
+      <div class="col-xs-3 col-sm-3" align="right"><strong>Photo:</strong></div> 
+        <div class="col-xs-9 col-sm-3">
+        <div id="photo"><%= image_tag(p.image_thumb_url) %></div>
+      </div>
+    <% else %>
+        <div class="col-xs-3 col-sm-3" align="right"><strong>Photo:</strong></div> 
+        <div class="col-xs-9 col-sm-3">No photo on record</div>
+    <% end %>
+    <div class="col-xs-3" align="right"><strong>Phone:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.phone_number.blank? ? "Phone not provided" : p.phone_number %></div>
+    <div class="col-xs-3" align="right"><strong>Address:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.address.blank? ? "Address not provided" : p.address %></div>
+    <div class="col-xs-3" align="right"><strong>City:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.city.blank? ? "City not provided" : p.city %></div>
+    <div class="col-xs-3" align="right"><strong>State:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.state.blank? ? "State not provided" : p.state %></div>
+    <div class="col-xs-3" align="right"><strong>Zipcode:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.zipcode.blank? ? "Zipcode not provided" : p.zipcode %></div>
+    <div class="col-xs-3" align="right"><strong>Country:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.country.blank? ? "Country not provided" : p.country %></div>
+  <% else %> <!-- Used by add loaded when a new provider is created successfully -->
+    <div class="col-xs-3" align="right"><strong>Name:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= text_field_tag :helpername, "" ,:readonly => true %></div>
+    <div class="col-xs-3" align="right"><strong>Photo:</strong></div>
+    <div class="clearfix">
+      <div id="photo" class="col-xs-9 col-sm-3"></div>
+    </div>
+    <div class="col-xs-3" align="right"><strong>Phone:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= text_field_tag :phone, "" ,:readonly => true %></div>
+    <div class="col-xs-3" align="right"><strong>Address:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= text_field_tag :address, "" ,:readonly => true %></div>
+    <div class="col-xs-3" align="right"><strong>City:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= text_field_tag :city, "" ,:readonly => true %></div>
+    <div class="col-xs-3" align="right"><strong>State:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= text_field_tag :state, "" ,:readonly => true %></div>
+    <div class="col-xs-3" align="right"><strong>Zipcode:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= text_field_tag :zipcode, "" ,:readonly => true %></div>
+    <div class="col-xs-3" align="right"><strong>Country:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= text_field_tag :country, "" ,:readonly => true %></div>
+  <% end %>
+  </div>
+
+  <div class="col-sm-12">
+    <h3>My Ratings</h3>
+    <p>Rating this <%= MyHelperList::HELPER_ALIAS %> on a scale of 1 (poor) to 5 (good).</p>
+  </div>
+  <div class="form-group">
+    <%= f.label :efficiency, "Efficiency:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-4 col-sm-3"><%= f.select :efficiency, [ ["Not rated",0],[1,1],[2,2],[3,3],[4,4],[5,5] ], {}, {:class => 'form-control'} %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :timeliness, "Timeliness:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-4 col-sm-3"><%= f.select :timeliness, [ ["Not rated",0],[1,1],[2,2],[3,3],[4,4],[5,5] ], {}, {:class => 'form-control'} %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :quality, "Quality:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-4 col-sm-3"><%= f.select :quality, [ ["Not rated",0],[1,1],[2,2],[3,3],[4,4],[5,5] ], {}, {:class => 'form-control'} %></div> 
+  </div>
+  <div class="form-group">
+    <%= f.label :overall, "Overall:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-4 col-sm-3"><%= f.select :overall, [ ["Not rated",0],[1,1],[2,2],[3,3],[4,4],[5,5] ], {}, {:class => 'form-control'} %></div>
+  </div>
+
+  <div class="col-xs-12">
+  <h3>My Comments</h3>
+  <%= f.text_area :comments ,:rows => 5, :class => "form-control" %>
+  </div>
+
+  <div class="col-xs-12" align="center" style="padding-top:20px;" >
+   <%= link_to "Cancel", my_helper_lists_path, :data => {confirm: "Choose OK to cancel without saving..."}, :class => "btn btn-default" %>
+   &nbsp;&nbsp;&#124;&nbsp;&nbsp;
+   <%= f.submit "Save", :id => "sav", :data => {disable_with: "Saving..."}, :class => "btn btn-primary" %>
+  </div>
+
+
+<% end %>
+
+<script type='text/javascript'> 
+jQuery(document).ready(function () {
+
+  if('<%= params[:action] %>'!='edit') {
+    $('#provider_desc').hide();
+
+  }
+
+  if(!(($('#provider_email').val()==null) || ($('#provider_email').val()=='')))
+  {
+    var isCheckingProvider = false;
+    $('#provider_not_present').empty();
+    $('#ck').click(function (a) {
+      if(!isCheckingProvider) {
+        document.getElementById("my_helper_list_provider_email").value=$('#provider_email').val();
+        isCheckingProvider = true;
+        jQuery.ajax({
+          url: "<%= check_helper_path %>?email=" + $('#provider_email').val(),
+          cache: false,
+          success: function(html) { },
+          error: function(jqXHR, textStatus, errorThrown) { },
+          complete: function() { 
+            isCheckingProvider = false; 
+
+          }
+        });
+     
+      } else {
+        a.preventDefault();
+      }
+
+    });
+  };
+
+  $('#provider_email').bind('focusout', function() {
+    if(!(($('#provider_email').val()==null) || ($('#provider_email').val()=='')))
+    {
+        document.getElementById("my_helper_list_provider_email").value=$('#provider_email').val();
+        jQuery.ajax({
+        url: "<%= check_helper_path %>?email=" + $('#provider_email').val(),
+        cache: false,
+        success: function(html) {
+           }
+        });
+    }
+   
+  });
+
+});  
+</script>
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+  jQuery("#sav").click(function() {
+    if(!(($('#provider_email').val()==null) || ($('#provider_email').val()==''))) {
+      document.getElementById("my_helper_list_provider_email").value=$('#provider_email').val();
+
+    } else {
+      document.getElementById("my_helper_list_provider_email").value='';
+      alert("Please enter a valid <%= MyHelperList::HELPER_ALIAS %> email address!");
+      return false;
+    }
+  });
+
+});
+</script>

@@ -1,0 +1,64 @@
+  <div class="col-xs-12">
+    <h4>Saved <%=UserLocation::LOCATION_ALIAS.pluralize %> <%= @errors.blank? ? "(Click #{UserLocation::LOCATION_ALIAS.downcase} name to use for this #{Task::TASK_ALIAS.downcase})" : "" %>
+      <a href="javascript:void(0)" id="hide_location"><u>Hide</u></a>
+    </h4>
+  </div>
+
+  <% if @errors %>
+    <div class="col-xs-12 error">Error! <%= @errors %></div>
+  <% elsif @user_locations.count == 0 %>
+    <div class="col-xs-12"><p>No saved locations</p></div>
+  <% else %>
+    <div class="col-xs-5 col-sm-3 page-label">Name</div>
+    <div class="hidden-xs col-sm-5 page-label">Address</div>
+    <div class="col-xs-5 col-sm-3 page-label">City</div>
+    <div class="col-xs-2 col-sm-1 page-label">State</div>
+    <% @user_locations.each do |user_location| %>
+      <div class="col-xs-5 col-sm-3">
+        <%= link_to (user_location.name) , 'javascript:void(0)', :id =>"ul#{user_location.id}", :onclick =>"checkloc(#{user_location.id})"%>
+      </div>
+      <div class="hidden-xs col-sm-5"><%= user_location.address %></div>
+      <div class="col-xs-5 col-sm-3"><%= user_location.city %></div>
+      <div class="col-xs-2 col-sm-1"><%= user_location.state %></div>
+      <div style="display:none">
+        <span id="addr<%= user_location.id %>"><%=  user_location.try(:address) %></span>
+        <span id="ct<%= user_location.id %>"><%=  user_location.try(:city) %></span>
+        <span id="st<%= user_location.id %>"><%=  user_location.try(:state) %></span>
+        <span id="zp<%= user_location.id %>"><%=  user_location.try(:zipcode) %></span>
+        <span id="co<%= user_location.id %>"><%=  user_location.try(:country) %></span>
+      </div>
+      <div class="clearfix"></div>
+    <% end %>
+  <% end %>
+
+<script type="text/javascript">
+
+  $("#hide_location").click(function(){
+     $("#my_locations").hide()
+  });
+
+function checkloc(user_location){
+// alert(user_location)
+  addr = "addr" + user_location
+  ct = "ct" + user_location
+  st = "st" + user_location
+  zp = "zp" + user_location
+  co = "co" + user_location
+
+  var addr_updated = document.getElementById("task_address");
+  addr_updated.value = document.getElementById(addr).innerHTML;
+
+  var ct_updated = document.getElementById("task_city");
+  ct_updated.value = document.getElementById(ct).innerHTML;
+
+  var st_updated = document.getElementById("task_state");
+  st_updated.value=  document.getElementById(st).innerHTML;
+ 
+  var zc_updated = document.getElementById("task_zipcode");
+  zc_updated.value = document.getElementById(zp).innerHTML;
+
+  var co_updated = document.getElementById("task_country");
+  co_updated.value = document.getElementById(co).innerHTML;
+
+ }
+</script>

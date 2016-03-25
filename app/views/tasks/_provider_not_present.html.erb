@@ -1,0 +1,81 @@
+<div class="ta-alert">
+<% if @result == "NoUser" %>
+    <strong>ALERT:</strong> The <%= MyHelperList::HELPER_ALIAS.downcase %> '<%= @email %>' does not exist. You may <%= link_to "create an account now" , new_helper_taskassure_users_path(:email =>@email, :role => "provider" ), :id => "testemail",:remote => true %> for them, and then you can assign <%= Task::TASK_ALIAS.downcase.pluralize %> to them. We will send an email to them with instructions to access their account.
+<% else %> 
+    <strong>ALERT:</strong> The <%= MyHelperList::HELPER_ALIAS.downcase %> '<%= @email %>' exists. However they can not receive <%= Task::TASK_ALIAS.downcase %> assignments.&nbsp;
+      You may want to contact them to learn if they have another account to receive assignments.
+<% end %>
+</div>
+
+<script language = "Javascript">
+
+function echeck(str) {
+
+    var at="@"
+    var dot="."
+    var lat=str.indexOf(at)
+    var lstr=str.length
+    var ldot=str.indexOf(dot)
+    if (str.indexOf(at)==-1){
+       alert("Please enter a valid email address!")
+       return false
+    }
+
+    if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
+       alert("Please enter a valid email address!")
+       return false
+    }
+
+    if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
+        alert("Please enter a valid email address!")
+        return false
+    }
+
+     if (str.indexOf(at,(lat+1))!=-1){
+        alert("Please enter a valid email address!")
+        return false
+     }
+
+     if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
+        alert("Please enter a valid email address!")
+        return false
+     }
+
+     if (str.indexOf(dot,(lat+2))==-1){
+        alert("Please enter a valid email address!")
+        return false
+     }
+    
+     if (str.indexOf(" ")!=-1){
+        alert("Please enter a valid email address!")
+        return false
+     }
+
+     return true          
+  }
+
+
+
+$( '#testemail' ).click( function( e ) {
+     var emailID=document.getElementById("task_provider_email")
+  if ((emailID.value==null)||(emailID.value=="")){
+  	$("#provider_not_present").empty();
+    alert("Please Enter your Email ID")
+    emailID.focus()
+    return false
+  }
+
+  if (echeck(emailID.value)==false){
+  	$("#provider_not_present").empty();
+    emailID.value=""
+    emailID.focus()
+    return false
+  }
+
+    return true
+
+    e.preventDefault();
+    return false;
+} );
+
+</script>

@@ -1,0 +1,227 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ *= require bootstrap-datetimepicker
+ */
+body {
+  background-color: #e0e0e0;
+}
+a img {
+  border: none;
+  border-width:0px;
+}
+.container {
+padding-right: 15px;
+padding-left: 15px;
+padding-bottom: 15px;
+margin-right: auto;
+margin-left: auto;
+background-color: #ffffff;
+max-width: 1170px;
+}
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+.tab{ color:#0000ee; text-decoration:none; padding:5px 10px; margin:15px}
+.tab:hover{ color:#0000ee; text-decoration: underline;}
+.tab_selected{ background:#252525 image-url('down_arrow.png') no-repeat center 25px; color:#fff; text-decoration:none; padding:5px 10px; border-radius:5px; }
+.tab_selected:hover{ color:#fff;}
+.error
+{
+	color: red;
+}
+#flash_error
+{
+   padding: 10px 0;
+  text-align: center;
+  background-color: red;
+  color: white;
+}
+#footer {
+  background-color: #252525;
+  color: #ffffff;
+}
+#footer a, #footer p, #footer h3, #footer h2 { color:#ffffff; }
+#flash_notice, #flash_alert {
+  padding: 10px 0;
+  margin-bottom: 5px;
+  text-align: center;
+  color: #FFF;
+}
+#flash_notice {
+  background-color: #355d8e;
+}
+#flash_alert {
+  background-color: #871F22;
+}
+#flash_notice a, #flash_alert a {
+  color: #FFF;
+}
+.field_with_errors { display: inline; color: red;}
+#task_photos {
+    border: 2px solid #C9C9C9;
+    margin-top: 10px;
+    margin-bottom: 10px; 
+    padding: 10px;
+}
+#map1 {
+    border: 2px solid rgb(201, 201, 201);
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding:0px;
+     border-radius:5px;
+     height:220px
+}
+.slider {
+    border: 2px solid rgb(201, 201, 201);
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding:10px; border-radius:5px; background:#ede9ea; box-shadow:1px 1px 1px #d9d7d8
+}
+.statuslog {
+    border: 2px solid rgb(201, 201, 201);
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding:10px; 
+    border-radius:5px; 
+    background:#ede9ea; 
+    height:420px; 
+    position: relative;
+    z-index: 0 !important;
+    overflow-y: scroll;
+    -webkit-overflow-y: scroll;
+    box-shadow:1px 1px 1px #d9d7d8;
+}
+.heading_wrap{ padding:10px 0; background:#fff; border-radius:5px; box-shadow:2px 2px 2px #686868; overflow:auto; border:1px solid #d1d1d1}
+.photo{
+    margin-top: 10px;
+    margin-bottom: 10px; 
+    padding:0;  width:130px; text-align:center;}
+.list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.list li {
+    background-image: image-url('bullet.jpg');
+    background-position: left 7px;
+    background-repeat: no-repeat;
+    display: block;
+    font-size: 12px;
+    padding: 4px 0 4px 15px;
+    width: auto;
+}
+#slidebox{position:relative ;overflow:hidden;}
+#slidebox, #slidebox ul {width:295px;height:180px;}
+#slidebox, #slidebox ul li{width:100%;height:180px;}
+#slidebox ul li{position:relative; left:0; text-align:center; float:left;list-style: none; padding:0;  font-family:Verdana, Geneva, sans-serif; font-size:13px;}
+#slidebox .next, #slidebox .previous{position:absolute; z-index:2; display:block; width:10px; height:17px;top:50px;}
+#slidebox .next{right:0; margin-right:0; padding-right:30px; background:image-url('slidebox_next.jpg') no-repeat left top;}
+#slidebox .previous{margin-left:0; background:image-url('slidebox_previous.jpg') no-repeat left top;}
+#slidebox .thumbs{position:absolute; z-index:2; bottom:10px; right:0;}
+#slidebox .thumbs a{display:block; margin-left:5px; float:left; font-family:Verdana, Geneva, sans-serif; font-size:9px; text-decoration:none; padding:2px 4px; background:image-url('slidebox_thumb.png'); color:#fff;}
+#slidebox .thumbs a:hover{background:#fff; color:#000;}
+#slidebox .thumbs .thumbActive{background:#fff; color:#000; display:block; margin-left:5px; float:left; font-family:Verdana, Geneva, sans-serif; font-size:9px; text-decoration:none; padding:2px 4px;}
+a.tooltip {
+  outline:none;
+  opacity: 1;
+  font-size: 14px; 
+} 
+a.tooltip strong {
+  line-height:30px;
+} 
+a.tooltip:hover {
+  text-decoration:none;
+} 
+a.tooltip span { 
+  z-index:10;
+  display:none; 
+  padding:14px 20px; 
+  margin-top:-30px; 
+  margin-left:28px; 
+  width:240px; 
+  line-height:16px; 
+} 
+a.tooltip:hover span{
+ display:inline; 
+ position:absolute; 
+ color:#111; 
+ border:1px solid #DCA; 
+ background:#fffAF0;
+ } 
+.callout {
+  z-index:20;
+  position:absolute;
+  top:30px;
+  border:0;
+  left:-12px;} 
+  /*CSS3 extras*/
+a.tooltip span { 
+   border-radius:4px; 
+   -moz-border-radius: 4px; 
+   -webkit-border-radius: 4px; 
+   -moz-box-shadow: 5px 5px 8px #CCC; 
+   -webkit-box-shadow: 5px 5px 8px #CCC;
+    box-shadow: 5px 5px 8px #CCC; 
+   }
+.ta-form-widget {
+  padding: 8px 12px;
+  color:#555;
+  height:38px;
+  line-height:1.42857;
+  background-color:#fff;
+  border:1px solid #ccc;
+  border-radius: 4px;
+}
+.ta-alert {
+  margin-top:8px;
+  margin-bottom:8px;
+  padding: 8px 12px;
+  color:#555;
+  background-color:#fafafa;
+  border:1px solid #ccc;
+  border-radius: 4px;
+}
+.ta-info {
+  margin-top:8px;
+  margin-bottom:8px;
+  padding: 8px 12px;
+  color:#555;
+  background-color:#fefefe;
+  border:1px solid #ccc;
+  border-radius: 4px;
+}
+input[type='checkbox'] {
+   width: 30px;
+   height: 30px;
+}
+.btn-primary {
+  background-color: #355d8e;
+}
+/* Override Bootstrap 3 font locations 
+(from stackoverflow: http://stackoverflow.com/questions/20255711/ruby-on-rails-bootstrap-glyphicons-not-working) 
+*/
+/*@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../assets/glyphicons-halflings-regular.eot');
+  src: url('../assets/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+  url('../assets/glyphicons-halflings-regular.woff') format('woff'),
+  url('../assets/glyphicons-halflings-regular.ttf') format('truetype'),
+  url('../assets/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}*/
+.navbar-nav>li>a {
+  font-weight: bold;
+}

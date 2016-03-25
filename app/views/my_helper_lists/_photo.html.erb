@@ -1,0 +1,6 @@
+<%if @provider_user.image_thumb_url.present? %>
+  <div class="col-xs-12 col-sm-5"><%= image_tag(@provider_user.image_thumb_url) %></div>
+<!-- added if image not found -->
+<% else %>
+   <div class="col-xs-12 col-sm-5"><%= image_tag "male_user.png", :class=>"img img-responsive" %></div>
+<% end %>

@@ -1,0 +1,23 @@
+var helpername = document.getElementById("helpername");
+helpername.value = "<%= raw get_data(@provider_user,'name')  %>";
+
+var phone = document.getElementById("phone");
+phone.value = "<%= raw get_data(@provider_user,'pn')  %> ";
+
+var address = document.getElementById("address");
+address.value = "<%= raw get_data(@provider_user,'ad')  %> ";
+
+var city = document.getElementById("city");
+city.value = "<%= raw get_data(@provider_user,'ct')  %> ";
+
+var state = document.getElementById("state");
+state.value = "<%= raw get_data(@provider_user,'st')  %> ";
+
+var zipcode = document.getElementById("zipcode");
+zipcode.value = "<%= raw get_data(@provider_user,'zp')  %> ";
+
+var country = document.getElementById("country");
+country.value = "<%= raw get_data(@provider_user,'co')  %> ";
+
+jQuery('#photo').html("<%= escape_javascript(render(:partial => '/my_helper_lists/photo')) %>").hide().fadeIn('fast');
+$('#provider_desc').show();

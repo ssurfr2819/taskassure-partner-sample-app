@@ -1,0 +1,11 @@
+<div class="col-xs-12 col-sm-1"><strong>Name</strong></div>
+<div class="col-xs-12 col-sm-5"><%= @provider.provider_user.firstname %> <%= @provider.provider_user.lastname %></div>
+<% if @provider.provider_user.image_thumb_url %>
+
+  <div class="col-xs-12 col-sm-1"><strong>Photo</strong></div>
+  <div class="col-xs-12 col-sm-5"><%= image_tag(@provider.provider_user.image_thumb_url, alt:"photo of #{@provider.provider_user.name}") %></div>
+<!-- added if image not found -->
+<% else %>
+  <div class="col-xs-12 col-sm-1"><strong>Photo</strong></div>
+  <div class="col-xs-12 col-sm-5"><%= image_tag "male_user.png", :class=>"img img-responsive" %></div>
+<% end %>

@@ -1,0 +1,64 @@
+<%= form_for @partner, :html => {:class => 'form-horizontal'} do |f| %>
+  <% if @partner.errors.any? %>
+      <div id="error_explanation">
+        <h3><%= pluralize(@partner.errors.count, "error") %> prohibited this Partner Account from being saved:</h3>
+        <ul>
+        <% @partner.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+  <% end %>
+
+  <div class="col-xs-12">
+    <h4>NOTE: All fields are required</h4>
+    <p>TaskAssure will only use the contact information related to operations and service of your account. Your information will not be shared with other organizations, except to the extent required to fulfill your requests. You are required to maintain current contact information for this account.</p>
+  <div class="form-group">
+    <%= f.label :name, "Partner Name:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :name,  :class => 'form-control' %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :email, "Email Address:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :email,  :class => 'form-control' %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :phone_number, "Phone Number:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :phone_number,  :class => 'form-control' %></div>
+  </div>
+  <div class="col-xs-12">
+    <p><strong>Aliases</strong> You can define aliases for TaskAssure's primary elements: tasks, helpers, and locations. For example, 
+    you may prefer the term "job" or "gig" or "contract" as an alias for "task". Or you might prefer "employee" or "pro" or "provider" for "helper". And you might prefer "property" or "job site" for "location". If you prefer a term other than the TaskAssure default for any of these elements, enter an alias below. TaskAssure will use these aliases when it displays information or generates communications, such as emails and text messages. Aliases are limited to no more than two words, and less than 20 characters. To use the default TaskAssure names, leave the alias fields blank.</p>
+  </div>
+  <div class="form-group">
+    <%= f.label :task_alias, "Task Alias:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :task_alias,  :class => 'form-control' %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :helper_alias, "Helper Alias:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :helper_alias,  :class => 'form-control' %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :location_alias, "Location Alias:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :location_alias,  :class => 'form-control' %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :status, "Account Status:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :status, :readonly => true, :class => 'form-control' %></div>
+  </div>
+  <div class="form-group">
+    <%= f.label :api_key, "API Key:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :api_key, :readonly => true, :class => 'form-control' %></div> 
+  </div>
+  <div class="form-group">
+    <%= f.label :api_secret, "API Secret:", :class=>"control-label col-xs-3" %>
+    <div class="col-xs-9"><%= f.text_field :api_secret, :readonly => true, :class => 'form-control' %></div> 
+  </div>
+</div>
+
+  <div class="col-xs-12" align="center" style="padding-top:20px;" >
+   <%= link_to "Cancel", root_path, :class => "btn btn-default" %>
+   &nbsp;&nbsp;&#124;&nbsp;&nbsp;
+   <%= f.submit "Save", :class => "btn btn-primary"%>
+  </div>
+
+<% end %>

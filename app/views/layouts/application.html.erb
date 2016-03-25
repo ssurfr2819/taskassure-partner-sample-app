@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="robots" content="nofollow">
+  <title><%= content_for?(:title) ? yield(:title) : "TaskAssure Partner Demo" %></title>
+  <%= favicon_link_tag 'favicon.ico' %> <!-- TODO modify to support various device formats -->
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body data-no-turbolink="true" style="font-family:sans-serif">
+<%#= yield :styles %>
+
+<div class="container">
+  <% if content_for?(:title) %>
+    <h2><%= yield(:title) %></h2>
+  <% end %>
+  <div class="row">
+    <%= render :partial => 'shared/header' %>
+  </div>
+  <div class="row">
+    <% flash.each do |name, msg| %>
+      <div class="col-xs-12">
+        <%= content_tag :div, replace_labels_using_env(msg.html_safe), :id => "flash_#{name}" %>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <%= yield %>
+  </div>
+</div>
+
+<%#= yield :scripts %>
+</body>
+</html>

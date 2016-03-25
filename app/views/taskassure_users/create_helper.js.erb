@@ -1,0 +1,7 @@
+<% if @create_success %>
+  alert("Account has been created");
+  $(document).trigger('close.facebox');
+<% else %>
+  $('#facebox .content').html('<%= escape_javascript(render :template => 'taskassure_users/new_helper.html') %>');
+  $('#facebox form').data('remote','true');
+<% end %>

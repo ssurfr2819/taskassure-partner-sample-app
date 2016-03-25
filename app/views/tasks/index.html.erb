@@ -1,0 +1,93 @@
+<div class="col-xs-12 col-sm-10"><h2><%= @page_title = "My #{Task::TASK_ALIAS.pluralize}" %></h2></div>
+<div class="col-xs-12 col-sm-2" align="right">
+    <%= link_to "Create #{Task::TASK_ALIAS}", new_task_url, :class => "btn btn-primary" %>
+</div>
+<div class="clearfix"></div>
+<% if @tasks.total_count == 0 %>
+  <div class ="col-sm-12"><h3>No <%= Task::TASK_ALIAS.downcase.pluralize %></h3></div>
+<% else %>
+
+  <div class="col-sm-12">
+    <h3><%= Task::TASK_ALIAS.pluralize %> (<%= @tasks.total_count %>)</h3>
+  </div>
+ 
+  <div class="clearfix">
+    <div id="idOfDiv" class="page-pagination">
+      <div class="col-sm-6"><%= page_entries_info @tasks, :entry_name => "#{Task::TASK_ALIAS}" %></div>
+      <div class="col-sm-6" align="right"><%= paginate @tasks %>
+        <%#= will_paginate @tasks %>&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden-sm hidden-xs col-md-1 col-lg-1 page-label">Category</div>
+  <div class="hidden-sm hidden-xs col-md-3 col-lg-2 page-label">Name</div>
+  <div class="hidden-sm hidden-xs col-md-4 col-lg-3 page-label">Description</div>
+  <div class="hidden-sm hidden-xs col-md-2 col-lg-2 page-label">Schedule</div>
+  <div class="hidden-sm hidden-xs col-md-2 col-lg-1 page-label">Status</div>
+  <div class="hidden-sm hidden-xs hidden-md col-lg-3 page-label">Actions</div>
+  <div class="clearfix"></div>
+  <div class="col-sm-12 page-hr" align="center"><hr/></div>
+  <div class="clearfix"></div>
+  <% @tasks.each do |task| %>
+   <%# cache(cache_key_for_buyer_task(task)) do %>
+    <div class="col-sm-1 col-lg-1">
+      <% if task.category_id %>
+          <%= image_tag( Category::CATEGORIES.find_by_id(task.category_id).url, class:'img img-responsive', alt:Category::CATEGORIES.find_by_id(task.category_id).name ) if Category::CATEGORIES.find_by_id(task.category_id) %>
+      <% else %>
+          &nbsp;&nbsp;
+      <% end %>
+    </div>
+
+    <div class="col-sm-3 col-lg-2"><strong><%= task.name %></strong></div>
+    <div class="col-sm-4 col-lg-3"><%= task.description.truncate(140, separator: ' ') %></div>
+    <div class="col-sm-2 col-lg-2">
+      <% myzone = Timezone::Zone.new :zone => task.zone if task.zone %> 
+      <%= task.local_time_string %> (<%= (task.zone.nil?)? "Unknown time zone": myzone.active_support_time_zone %>)
+    </div>
+    <div class="col-sm-2 col-lg-1">
+        <% unless task.status == "inactive" %>
+          <p><strong>
+            <% if !task.valid_task && task.provider_id.nil? %>
+               <span class="invalid-task">Not assigned</span>
+            <% elsif task.provider_id.nil? && task.valid_task %>
+               <span style="invalid-task">Not assigned</span>
+            <% elsif task.provider_id && !task.valid_task %>
+               <span style="invalid-task">Invalid address</span>
+            <% else %>
+              <% if task.status.blank? %>
+                Unknown
+              <% else %>
+                <%= task.status.blank? ? "Unknown" : task.status.humanize %>
+              <% end %>
+            <% end %>
+          </strong></p>
+        <% else %>
+          <strong>
+          <a href="#" class="tooltip">INACTIVE 
+          <span> <img class="callout" src="/assets/callout.gif" /> 
+            <strong><%= Task::TASK_ALIAS %> is inactive!</strong><br /></span> </a> 
+          </strong>
+        <% end %>
+    </div>
+    <div class="col-sm-12 col-lg-3" align="center" style="padding-top:6px;">
+      <%= link_to 'Show', task, :data => {:disable_with => "Loading..."} %>&nbsp;&#124;&nbsp;
+      <%= link_to 'Edit', edit_task_path(task), :data => {:disable_with => "Loading..."} %>&nbsp;&#124;&nbsp;
+      <%= link_to 'Copy', copy_task_path(task), :data => {:disable_with => "Loading..."} %>&nbsp;&#124;&nbsp;
+      <%= link_to 'Delete', delete_task_task_path(task), :data => {:disable_with => "Loading..."} %>
+    </div>
+   <%# end %>
+  <div class="clearfix"></div>
+  <div class="col-sm-12 page-thin-hr" align="center"><hr/></div>
+  <div class="clearfix"></div>
+  <% end %>
+  <%# end %>
+
+  <div class="clearfix">
+    <div id="idOfDiv2" class="page-pagination">
+      <div class="col-sm-6"><%= page_entries_info @tasks, :entry_name => "#{Task::TASK_ALIAS}" %></div>
+      <div class="col-sm-6" align="right"><%= paginate @tasks %>&nbsp;&nbsp;</div>
+    </div>
+  </div>
+
+<% end %>

@@ -1,0 +1,14 @@
+<script src="//maps.google.com/maps/api/js?v=3.18&sensor=false&client=&key=&libraries=geometry&language=&hl=&region="></script> 
+<script src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"></script>
+
+<div id="taskbigmap" class="bigmap2"></div>
+
+<script type="text/javascript">
+	handler = Gmaps.build('Google', { markers: { do_clustering: true, randomize: true, max_random_distance: 2 }});
+	handler.buildMap({provider: {},
+	internal: {id: 'taskbigmap', class: 'bigmap2', container_class: 'bigmap'}}, function(){
+	markers = handler.addMarkers(<%=raw @json2 %>);
+	handler.bounds.extendWith(markers);
+	handler.fitMapToBounds();
+});
+</script>

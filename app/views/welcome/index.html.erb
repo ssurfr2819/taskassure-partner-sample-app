@@ -1,0 +1,34 @@
+<% if @partner %>
+  <div class="col-xs-8">
+  <h3>Partner: <%= link_to "#{@partner.name}",partner_path(@partner) %></h3>
+      <p>
+        Partner app URL: <strong><%= @localhost %></strong><br/>
+        TaskAssure URL: <strong><%= @host || "localhost:3001" %></strong>
+      </p>
+  </div>
+
+  <div class="col-xs-3" align="right">
+     <%= link_to "Create User", new_user_path, :class => "btn btn-primary" %>
+  </div>
+  <div class="clearfix"></div>
+
+  <div class="col-xs-12" style="font-size:1.4em;">
+    <p>This app allows you to explore some of the capabilities that are easily achievable via the TaskAssure API. <br/>
+    On the pages within this app, you can create and manage '<%= Task::TASK_ALIAS.downcase.pluralize %>' (services that you want performed) that will be accessed through TaskAssure, as well as '<%= UserLocation::LOCATION_ALIAS.downcase.pluralize %>' (places that you want <%= Task::TASK_ALIAS.downcase.pluralize %> to be performed) and '<%= MyHelperList::HELPER_ALIAS.downcase.pluralize %>' (people that perform <%= Task::TASK_ALIAS.downcase.pluralize %> for you). <br/>
+    &nbsp;<br/>
+  <% if @users.count == 0 %>
+    No users exist. To use the demo app please create a user now using the button above.
+  <% else %>
+      <p>To continue, either create a new user with the button above, or <br/>
+      Select a user from the list below:</p>
+    <% @users.each do |user| %>
+      <div class="col-xs-11 col-xs-offset-1"><%= link_to user[:email], switch_user_path(user) %></div>
+    <% end %>
+  <% end %>
+  </div>
+<% else %>
+  <div class="col-xs-12">
+    <h3>No partner information available</h3>
+    <p>Since this demo app <strong>and the TaskAssure test system that it uses</strong> run on free cloud servers, they may have been in sleep mode. Refreshing the page may solve your issue.</p>
+  </div>
+<% end %>

@@ -1,0 +1,56 @@
+<div class="col-xs-12">  
+	<h3>Delete <%= Task::TASK_ALIAS %></h3> 
+	<p>If you continue with this operation we will delete <%= Task::TASK_ALIAS.downcase %> <strong><%= @task.name %></strong>.<br/> 
+	   You can delete the selected <%= Task::TASK_ALIAS.downcase %> or also delete other <%= Task::TASK_ALIAS.downcase.pluralize %> with the same name.<br/>
+	   If you choose to include other <%= Task::TASK_ALIAS.downcase.pluralize %> with same name, the system will delete<br/>
+	   a maximum of ten <%= Task::TASK_ALIAS.downcase.pluralize %>. Repeat this operation to delete more if desired.<br/>
+	   Please be certain about this operation. After you confirm it, the deleted <%= Task::TASK_ALIAS.downcase.pluralize %> are not recoverable. <br/><br/>
+	   Click Cancel to return to the <%= Task::TASK_ALIAS.downcase %> list without deleting any <%= Task::TASK_ALIAS.downcase %>.<br/>
+	</p>
+
+	<h3><%= Task::TASK_ALIAS %>: <%= @task.name %></h3>
+	<% myzone = Timezone::Zone.new :zone => @task.zone if @task.zone %>
+	<p>Current <%= Task::TASK_ALIAS.downcase %> start date/time: <%= @task.local_time_string %> (<%= (@task.zone.nil?)? "Unknown time zone": myzone.active_support_time_zone; %>)</p>
+	<br/>
+</div>
+
+	<%= form_tag delete_task_task_path ,:id => "deltask", :method => :delete do %>
+	  <div class="col-xs-12 col-sm-6 col-md-4" >	
+		<%= radio_button_tag "delete", "only", :checked, :style => "height:1.8em; width:1.8em; vertical-align: middle;" %> 
+		<%= label_tag "only", "Delete only this occurrence of the #{Task::TASK_ALIAS.downcase}" %>
+	  </div>
+	  <div class="col-xs-12 col-sm-6 col-md-4" >	
+		<%= radio_button_tag "delete", "all", false, :style => "height:1.8em; width:1.8em; vertical-align: middle;" %> 
+		<%= label_tag "all", "Delete other #{Task::TASK_ALIAS.downcase.pluralize} with the same name" %>
+	  </div>
+  	  <div class="clearfix"></div>
+      <div class="col-xs-12" align="center">  
+	    <div id="proggif"  style="display:none"><%= image_tag "ajax-loader.gif" %><p>&nbsp;</p></div>
+	  </div>
+  	  <div class="col-xs-12"><p>&nbsp;</p></div>
+      <div class="col-xs-12">  
+	    <%= submit_tag "Cancel" , :class => "btn btn-default" %>
+	            &nbsp;&nbsp;&#124;&nbsp;&nbsp;
+	    <input name="button" type="button" value="Delete" onclick="updateTxt()" class="btn btn-primary">
+		<%#= link_to "Cancel", tasks_path ,:class => "btn btn-primary"%>
+	  </div>
+	<% end %>
+
+<script type="text/javascript">
+function updateTxt()
+{  
+	var field1 = $("input[name='delete']:checked").val();
+	if (field1 == "only")
+		var a = confirm('Delete this occurrence of "<%= @task.name %>"?');
+	else
+		var a = confirm('Delete this occurrence and the oldest nine <%= Task::TASK_ALIAS.downcase.pluralize %> with name "<%= @task.name %>"?');
+
+	if (a){
+		document.getElementById("proggif").style.display="block"
+	    document.getElementById("deltask").submit();
+	}
+	 else
+	   return false;
+
+}  
+</script>

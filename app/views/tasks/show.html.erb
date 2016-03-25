@@ -1,0 +1,252 @@
+ <%= stylesheet_link_tag "lightbox.css" %>
+ <%= javascript_include_tag "lightbox1.js" ,"jcarousellite_1.0.1c5.js"%>
+<script src="//maps.google.com/maps/api/js?v=3.18&sensor=false&client=&key=&libraries=geometry&language=&hl=&region="></script> 
+<script src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"></script>
+<!-- <script src='//google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.9/src/infobox_packed.js' type='text/javascript'></script> // only if you need custom infoboxes -->
+<script type="text/javascript">
+// Do NOT use circular mode. It causes an extra li item to be created!
+$(document).ready(function() {
+  $("#slidebox").jCarouselLite({
+    vertical: false,
+    hoverPause:true,
+    btnPrev: ".previous",
+    btnNext: ".next",
+    visible: 1,
+    start: 0,
+    scroll: 1,
+    circular: false,
+    auto:false,
+    speed:500,
+    afterEnd: function(i) {
+        var index = $(i[0]).index()+1;
+        slidebox_photosheader(index);
+    }
+  });
+});
+</script> 
+
+<script>
+    function photocounter(s) { 
+ $('#photocounter').html(s); 
+}; 
+
+function slidebox_photosheader(x) { 
+    photocounter("<h3>Photos (" + x + " of " + <%= @task.task_photos.count %> + ")</h3>"); 
+}; 
+</script>
+
+<%#= title "Task Information" %>
+<% if @task.errors.any? %>
+  <div id="task_errors">
+    <h3><%= pluralize(@task.errors.count, "error") %> <%= pluralize(@task.errors.count, "was") %> detected:</h3>
+    <ul>
+    <% @task.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div>
+  <% if @task.valid_task == false %>
+    <% if @task.latitude.blank? || @task.longitude.blank? %>
+      <h3 style="color:red"> <%= Task::TASK_ALIAS %> address is incomplete or invalid!</h3>
+    <% end %>
+    <% if @task.provider_id.blank? %>
+	<h3 style="color:red"><%= Task::TASK_ALIAS %> not assigned!</h3>
+    <% end %>
+  <% end %>
+</div>
+
+<div id="task_details">
+  <div class="col-xs-12 col-sm-6">
+    <p style="font-size:1.25em;"><strong><%= Task::TASK_ALIAS %>: </strong><%= @task.name %></p>
+  </div>
+  <div class="col-xs-12 col-sm-6">
+    <p style="font-size:1.25em;"><strong>Current Status: </strong>
+    <% if @task.status.blank? %>
+      Unknown
+    <% else %>
+      <%= @task.status.upcase %>
+    <% end %>
+    </p>
+  </div>
+</div>
+
+<h3 class="col-xs-12"><%= Task::TASK_ALIAS %> Details</h3>
+
+<!-- create zone variable for use in time displays -->
+<% myzone = Timezone::Zone.new :zone => @task.zone if @task.zone %>
+
+<div class="col-xs-12 col-md-6">
+  <p><strong>Desired start time:&nbsp;</strong>
+    <%= @task.local_time_string %> (<%= (@task.zone.nil?)? "Unknown time zone": myzone.active_support_time_zone %>)
+  </p>
+</div>
+<div class="col-xs-12 col-md-2">
+  <p><strong>Duration:&nbsp;</strong><%= @task.duration %>&nbsp;<%= @task.duration_units %></p>
+</div>
+<div class="col-xs-12 col-md-4">
+<% if @task.time_on_task == 0 %>
+    <p><strong>Time on <%= Task::TASK_ALIAS.downcase %>:&nbsp;</strong>None reported</p>
+<% else %>
+  <% mm2, ss2 = @task.time_on_task.divmod(60) %>
+  <% hh2, mm2 = mm2.divmod(60) %>
+  <% dd2, hh2 = hh2.divmod(24) %>
+  <% if @task.time_on_task >= 86400 %>
+    <p><strong>Time on <%= Task::TASK_ALIAS.downcase %>:&nbsp;</strong><%= pluralize(dd2,'day') + ', ' + pluralize(hh2,'hour') + ', ' + pluralize(mm2,'minute') %></p>
+  <% elsif @task.time_on_task >= 3600 %>
+    <p><strong>Time on <%= Task::TASK_ALIAS.downcase %>:&nbsp;</strong><%= pluralize(hh2,'hour') + ', ' + pluralize(mm2,'minute') %></p>
+  <% elsif @task.time_on_task >= 60 %>
+    <p><strong>Time on <%= Task::TASK_ALIAS.downcase %>:&nbsp;</strong><%= pluralize(mm2,'minute') %></p>
+  <% else %>
+    <p><strong>Time on <%= Task::TASK_ALIAS.downcase %>:&nbsp;</strong>Less than 1 minute</p>
+  <% end %>
+<% end %>
+</div>
+
+<div class="col-xs-12">
+  <p><strong>Description:&nbsp;</strong><%= @task.description %></p>
+  <p><strong>Warnings:&nbsp;</strong><%= @task.warnings %></p>
+  <p><strong>Address:&nbsp;</strong><%= @task.address %>, <%= @task.city %>, <%= @task.state %>, <%= @task.zipcode %></p>
+</div>
+
+<div class="col-xs-12 col-md-6">
+  <div class="slider"><strong>Assigned <%= MyHelperList::HELPER_ALIAS %></strong>
+    <% if @task.provider_user %>
+      <div class="img-responsive img-rounded">  
+        <%if !@task.provider_user.image_thumb_url.nil? %>
+          <%= image_tag(@task.provider_user.image_thumb_url) %>
+        <%else%>
+          <%= image_tag("male_user.png") %>
+        <% end %>
+      </div>
+      <div> 
+        <% if @task.provider_user.name.nil? %>
+          <%= @task.provider_user.email %>
+        <% else %>
+          <%= @task.provider_user.name %> (<%= @task.provider_user.email %>)
+        <% end %>
+      </div>
+      <% if Rails.env.development? %>
+        <p>Provider ID: <%= @task.provider_id %> User ID: <%= @task.provider_user.id %></p>
+      <% end %>
+    <% else %>
+      <p><%= Task::TASK_ALIAS %> not assigned</p>
+    <% end %>
+  </div>
+</div>
+
+
+<div class="col-xs-12 col-md-6">
+  <div class="slider"><strong>Client</strong>
+    <div class="img-responsive img-rounded">
+      <%if !@task.buyer_user.image_thumb_url.nil? %>
+        <%= image_tag(@task.buyer_user.image_thumb_url) %>
+      <%else%>
+        <%= image_tag("male_user.png") %>
+      <% end %>
+    </div>
+    <div>
+      <% if @task.buyer_user.name.nil? %>
+        <%= @task.buyer_user.email %>
+      <% else %>
+        <%= @task.buyer_user.name %> (<%= @task.buyer_user.email %>)
+      <% end %>
+    </div>
+    <% if Rails.env.development? %>
+      <p>Buyer ID: <%= @task.buyer_id %> User ID: <%= @task.buyer_user.id %></p>
+    <% end %> 
+  </div>
+</div>
+
+<div class="col-xs-12">
+  <h3>Monitoring Actions</h3>
+  <%= render 'monitoring_actions' %>
+</div>
+
+<div align="left" class="col-xs-12 col-md-5">
+  <% if @task.task_photos.count == 0 %>
+    <h3>Photos (0)</h3>
+  <% else %>
+  <div id="photocounter"><h3>Photos (1 of <%= @task.task_photos.count %>)</h3></div>
+  <% end %>
+  <div class="slider">
+    <div><strong>&nbsp;</strong></div>
+  <% if @task.task_photos.count > 0 %>
+    <div id="slidebox">
+      <div class="next"></div>
+      <div class="previous"></div>
+      <ul style="padding:10px">
+      <% @task.task_photos.each do |photo| %>
+          <li><%= link_to image_tag(photo.image_thumb_url), photo.image_large_url %></li>
+      <% end %>  
+      </ul>
+    </div>
+  <% end %>
+  </div>
+</div>
+
+<div class="col-xs-12 col-md-7" >
+  <% if @json2.nil? %>
+    <div><h3>Location Tracks</h3></div>
+    <div class="slider">
+      <div><p><strong>No location reports</strong></p></div>
+    </div>
+
+  <% else %>
+    <div><h3>Location Tracks (<%= @json2.scan(/infowindow/).count %>)</h3></div>
+    <div class="img-responsive" >
+      <div class="map_container" id="taskmap" ></div>
+    </div>
+    <div class="hidden-xs hidden-sm" align="right"><strong>
+      <%= link_to 'View Larger Map', "#", :onclick=>"javascript: tb_show('', '#{map1_task_path}?receiver_id=51&placeValuesBeforeTB_=savedValues&TB_iframe=true&height=450&width=850&modal=false', tb_pathToImage);",  :class=>"thickbox" %></strong>
+    </div>
+  <% end %>
+</div>
+
+<div class="col-xs-12">
+  <h3>Event Log</h3>
+  <p>All event times shown in local time for this <%= Task::TASK_ALIAS.downcase %> location. 
+    <strong>(<%= (@task.zone.nil?)? "Unknown time zone": myzone.active_support_time_zone %>)</strong>
+  </p>
+</div>
+
+<div class="col-xs-12">
+
+    <div class="heading_wrap">
+        <div class="hidden-xs col-sm-4"><strong><%= Task::TASK_ALIAS.upcase %> EVENT</strong></div>
+        <div class="hidden-xs col-sm-4"><strong>DATE TIME</strong></div>
+        <div class="hidden-xs col-sm-4"><strong>DESCRIPTION</strong></div>
+        <div class="visible-xs col-xs-12" align="center"><strong><%= Task::TASK_ALIAS.upcase %> EVENTS</strong></div>
+    </div>
+
+      
+  <div class="statuslog">
+  <%# cache(cache_key_for_task_statuses(@task)) do %>
+    <% @task.statuses.each do |status| %>
+          <div class="col-sm-4"><%= status.name.blank? ? "None" : status.name.upcase %></div>
+          <% if @task.zone %>
+            <% statustime = myzone.time status.created_at %>
+            <div class="col-sm-4"><%= statustime.strftime("%e %b %Y %l:%M:%S %p") %><%#= HashWithIndifferentAccess.new(JSON.parse(status.marker, symbolize_names: true))['infowindow'] %></div>
+          <% else %>
+            <div class="col-sm-4">Unknown</div>
+          <% end %>
+          <div class="col-sm-4"><%= status.description.html_safe rescue nil %></div>
+          <div class='clearfix'></div>
+          <div class="col-xs-12 hidden-md hidden-lg" align="center"><hr style="border-width:1px; border-color:rgba(13,132,132,0.5);" /></div>
+    <% end %>
+  <%# end %>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+handler = Gmaps.build('Google');
+handler.buildMap({ internal: {id: 'taskmap'}}, function(){
+  markers = handler.addMarkers(<%=raw @json2 %>);
+  handler.bounds.extendWith(markers);
+  handler.fitMapToBounds();
+});
+</script>
+

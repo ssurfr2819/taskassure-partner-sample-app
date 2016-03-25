@@ -1,0 +1,412 @@
+<%= stylesheet_link_tag "token-input","facebox.css", "bootstrap-datetimepicker.min.css" %>
+<%= javascript_include_tag "jquery.validate.min","validation" ,"jquery.tokeninput","facebox", "bootstrap-datetimepicker" %>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp" type="text/javascript"></script>
+
+<div class="col-xs-12">
+
+<%= form_for @task, :html => {:id => 'task', :class => 'form-horizontal'} do |f| %>
+<h2><%= @page_title = "#{Task::TASK_ALIAS} Definition" %></h2>
+<h3>Tell us about this <%= Task::TASK_ALIAS.downcase%> so we can keep you informed</h3>
+  <h4>What is this <%= Task::TASK_ALIAS.downcase %>?</h4>
+
+    <div class="form-group">
+      <%= f.label :name, :class => 'control-label col-xs-4 col-sm-3' %>
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> name is required. Provide a short name that highlights the main activity. More details can be entered into the Description. Examples: 'Replace water heater', 'Prepare meals', 'Transport Mr. Smith to appointment' and 'Clean home'.</span></a>
+      </div>
+      <div class="col-xs-12 col-sm-8"><%= f.text_field :name, :class => 'form-control' %></div>
+    </div>
+    <div class="form-group">
+      <%= f.label :description, :class => 'control-label col-xs-4 col-sm-3' %>
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> description is optional. Use it to provide more information about what you expect to occur during the <%= Task::TASK_ALIAS.downcase %>. </span></a>
+      </div>
+      <div class="col-xs-12 col-sm-8"><%= f.text_area :description, :rows => 6, :class => 'form-control' %></div>
+    </div>
+    <div class="form-group">
+      <%= f.label :warnings, 'Any specific concerns or warnings?', :class => 'control-label col-xs-4 col-sm-3' %>
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> concerns or warnings is optional. Use it to provide any additional information you want to give about your concerns.</span></a>
+      </div>
+      <div class="col-xs-12 col-sm-8"><%= f.text_area :warnings, :rows => 6, :class => 'form-control' %></div>
+    </div>
+    <div class="form-group">
+      <%= f.label :category_id, 'Category', :class => 'control-label col-xs-4 col-sm-3' %>
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> category defaults to 'Other'. You can choose a category that better fits this <%= Task::TASK_ALIAS.downcase %>. If you are uncertain, just leave 'Other'.</span></a>
+      </div>
+      <% unless @task.category_id.nil? %>
+        <div class="col-xs-12 col-sm-8"><%= f.select :category_id , options_from_collection_for_select(Category::CATEGORIES, :id, :name, @task.category_id), {}, {:class => 'form-control'} %></div>
+      <% else %>
+        <div class="col-xs-12 col-sm-8"><%= f.select :category_id , options_from_collection_for_select(Category::CATEGORIES, :id, :name, Category::OTHER.id), {}, {:class => 'form-control'} %></div>
+      <% end %>
+    </div>
+<br />
+
+  <h4>When should the <%= Task::TASK_ALIAS.downcase %> take place?</h4>
+    <p>Note: A date and time is required. If desired, use the calendar pick tool. Time is assumed to be in the timezone of the <%= Task::TASK_ALIAS.downcase %> location.</p>
+    <div class="form-group">
+    <%# Time.zone = "UTC" %>
+      <%= f.label :local_time_string, 'Desired Start Time', :class => "control-label col-xs-4 col-sm-3" %>
+
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> start date and time are required. If you do not care when the <%= Task::TASK_ALIAS.downcase %> will be performed, just use the current date and time, or the earliest that you think the <%= Task::TASK_ALIAS.downcase %> could be performed.</span></a>
+      </div>
+
+      <div class="col-xs-12 col-sm-8">
+         <% if !@task.local_time_string %>
+            <div class='input-group date' id='datetimepicker1'>
+                <%= f.text_field :local_time_string, :class => "form-control" %>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+
+        <% else %>
+            <div class='input-group date' id='datetimepicker1'>
+                <%= f.text_field :local_time_string, :class => "form-control" %>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        <% end %>
+
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="form-group">
+        <%= f.label :duration, :class=>"control-label col-xs-4 col-sm-3" %>
+
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> duration is required. It is used to calculate expected completion time. If you are uncertain, enter something simple such as 1 hour.</span></a>
+      </div>
+
+      <div class="col-xs-12 col-sm-8">
+        <%= f.text_field :duration, :class=> "ta-form-widget" %>&nbsp;
+        <%= f.label :duration_units, :class => 'control-label sr-only' %>
+        <%= f.select :duration_units, options_for_select(['Minutes', 'Hours', 'Days'], @task.duration_units || ['Hours']), {}, {:id => "durationunits", :class=>"ta-form-widget"} %> 
+      </div>
+    </div>
+
+  <h4>Where should the <%= Task::TASK_ALIAS.downcase %> take place?</h4>
+     <div class="col-xs-12" align="right" style="padding:0px 10px 10px 0px;">
+      <%= link_to image_tag("location.png", :width => 32, :height => 32 ) + "View Saved #{UserLocation::LOCATION_ALIAS.pluralize}", 'javascript:void(0)',:id => "display_my_locations"%>
+     </div>
+    <div id="my_locations" style="overflow-y:scroll;overflow-x:hidden;max-height:200px;border:1px solid #ccc;border-radius:4px;margin-bottom:15px;">
+    </div> 
+
+    <div class="form-group">
+      <%= f.label :address, :class => "control-label col-xs-4 col-sm-3" %>
+
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> address is required. We use your <%= Task::TASK_ALIAS.downcase %> defaults settings, but you can change them. The <%= Task::TASK_ALIAS.downcase %> will not be sent to the person that you assign until a valid address is provided.</span></a>
+      </div>
+
+      <div class="col-xs-12 col-sm-8"><%= f.text_field :address, size:50, :class => 'form-control' %></div>
+    </div>
+    <div class="form-group">
+      <%= f.label :city, :class => "control-label col-xs-4 col-sm-3" %>
+
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> City is required. You can leave the City blank initially, but the <%= Task::TASK_ALIAS.downcase %> will not be sent to the person that you assign until a valid complete address is provided.</span></a>
+      </div>
+
+      <div class="col-xs-12 col-sm-8"><%= f.text_field :city, size:50, :class => 'form-control' %></div>
+    </div>
+
+    <div class="hidden" >  
+         <%#= f.hidden_field :latitude, :value => @task.latitude %>
+         <%#= f.hidden_field :longitude, :value => @task.longitude %>
+         <%= f.text_field :latitude %>
+         <%= f.text_field :longitude %>
+    </div>
+      
+    <div class="form-group">
+      <%= f.label :state, 'State or Province', :class => "control-label col-xs-4 col-sm-3" %>
+
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> State or Province is not required. But if the country the <%= Task::TASK_ALIAS.downcase %> will be performed in uses States, Provinces or Regions, you should provide it here.</span></a>
+      </div>
+
+      <div class="col-xs-12 col-sm-8"><%= f.text_field :state, size:50, :class => 'form-control' %></div>
+    </div>
+     <div class="form-group">
+      <%= f.label :zipcode, "ZIP or Postal Code", :class => "control-label col-xs-4 col-sm-3" %>
+
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> ZIP or Postal code is required with the address. The <%= Task::TASK_ALIAS.downcase %> will not be sent to the person that you assign until a valid complete address is provided.</span></a>
+      </div>
+
+      <div class="col-xs-12 col-sm-8"><%= f.text_field :zipcode, size:50, :class => 'form-control' %></div>
+    </div>
+   
+    <div class="form-group">
+      <%= f.label :country, :class => "control-label col-xs-4 col-sm-3" %>
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The <%= Task::TASK_ALIAS.downcase %> Country is required.</span></a>
+      </div> 
+      <% unless @task.country.nil? %>
+        <div class="col-xs-12 col-sm-8"><%= f.select :country , options_from_collection_for_select(Country::COUNTRIES, 'iso', 'printable_name', @task.country), {}, {:id => "task_country", :class => 'form-control'} %></div>
+      <% else %>
+        <div class="col-xs-12 col-sm-8"><%= f.select :country , options_from_collection_for_select(Country::COUNTRIES, 'iso', 'printable_name', Country::US.iso) , {}, {:id => "task_country", :class => 'form-control'} %></div>
+      <% end %>
+    </div><br />
+
+     <div class="col-xs-12" align="right" style="padding:0px 10px 10px 0px;">
+      <%= link_to image_tag("addlocation.png", :width => 32, :height => 32 ) + "Save This #{UserLocation::LOCATION_ALIAS}", newpopup_path,:remote => true %>
+     </div>
+
+    <div class="form-group">
+      <div class="col-xs-12 col-sm-8" align=right>
+         <%= check_box_tag :default_address, true %>&nbsp;&nbsp;<strong>Use the above <%= UserLocation::LOCATION_ALIAS.downcase %> as default for all new <%= Task::TASK_ALIAS.downcase.pluralize %></strong>
+      </div>
+    </div>
+
+  <h4>Who will perform this <%= Task::TASK_ALIAS.downcase %>?</h4>
+    <div class="col-xs-8 col-xs-offset-4" align="center" style="padding:0px 0px 10px 0px;">
+        <%= link_to image_tag("magnifying_glass_icon.png") + "View Saved #{MyHelperList::HELPER_ALIAS.pluralize}", 'javascript:void(0)',:id => "cka"%>&nbsp;
+    </div>
+
+    <div id="my_helper_lists" style="overflow-y:scroll;overflow-x:hidden;max-height:200px;border:1px solid #ccc;border-radius: 4px;margin-bottom:15px;">
+    </div>
+
+    <div class="form-group">
+      <%= f.label :provider_email, "#{MyHelperList::HELPER_ALIAS} Email Address", :class => "control-label col-xs-4 col-sm-3" %>
+      <div class="col-xs-8 col-sm-1">
+        <a href="#" class="tooltip" tabindex="-1"><%= image_tag('tooltip.png', alt:'help text') %><span><%= image_tag('callout.gif', :class => 'callout') %>The TaskAssure account email is required before the <%= Task::TASK_ALIAS.downcase %> can be performed. You can leave this field blank and save the <%= Task::TASK_ALIAS.downcase %> now, but if so you must edit the <%= Task::TASK_ALIAS.downcase %> at a future time and provide a valid account email so that we can send the <%= Task::TASK_ALIAS.downcase %> to the person you assign. Ask the person for the email address they used when they created their TaskAssure account. Use 'Verify <%= MyHelperList::HELPER_ALIAS %>' to check if the email address you enter is currently registered. Use 'View Saved <%= MyHelperList::HELPER_ALIAS.pluralize %>' to see a list of your previous assigned <%= MyHelperList::HELPER_ALIAS.downcase.pluralize %>.</span></a>
+      </div>
+
+      <div class="col-xs-9 col-sm-5" >
+          <%= f.text_field :provider_email, size:50, :class => 'form-control' %>
+      </div>
+      <div class="col-xs-2 col-xs-offset-1 col-sm-2 col-sm-offset-1" style="padding:0px 10px 10px 0px;">
+        <%= link_to image_tag("images.jpg", :width => 32, :height => 32 ) + "  Verify #{MyHelperList::HELPER_ALIAS}", 'javascript:void(0)',:id => "ck"%>
+      </div>
+
+    </div>
+    
+    <div id="provider_not_present">
+        <% if !@task.provider_user.blank? %>
+          <p>&nbsp;</p>
+          <div class="col-xs-1 col-sm-1"><strong>Name</strong></div>
+          <div class="col-xs-11 col-sm-5"><%= @task.provider_user.firstname %> <%= @task.provider_user.lastname %></div>
+          <div class="col-xs-1 col-sm-1"><strong>Photo</strong></div>
+          <div class="col-xs-11 col-sm-5">
+            <% if @task.provider_user.image_thumb_url.present? %>
+              <%= image_tag(@task.provider_user.image_thumb_url, :class => "img img-responsive") %>
+            <%else%>
+              <%= image_tag "male_user.png", :class=>"img img-responsive" %>
+            <% end %>
+          </div> 
+        <% end %>
+    </div>        
+
+    <div class="clearfix"></div>
+    <div class="col-xs-8"><h2><%= Task::TASK_ALIAS %> Settings (Optional)</h2></div>
+    <div class="col-xs-4"><p style="margin-top:20px; font-size:1.4em;"><strong><%= link_to "Show/Hide Settings", 'javascript:void(0)',:id => "display_task_settings"%></strong><p></div>
+    <div class="col-xs-8"><p>You are in control of the monitoring and notification settings for <%= Task::TASK_ALIAS.downcase.pluralize %> you create. For example, enable or disable monitoring of <%= Task::TASK_ALIAS.downcase %> start time, or <%= MyHelperList::HELPER_ALIAS.downcase %> location during the <%= Task::TASK_ALIAS.downcase %>. And enable or disable email or text message notification for <%= Task::TASK_ALIAS.downcase %> progress. <strong>These settings are hidden by default. Click the 'Show/Hide Settings' link to view and change them to meet your needs.</strong></p></div>
+    <div class="clearfix"></div>
+    <div id="task-settings"><%= render :partial=>'settings', :locals=>{:f=>f} %></div>
+    <div class="clearfix"></div>
+
+  </div>
+  <div class="col-xs-12" align="center">  
+    <div id="proggif"  style="display:none"><%= image_tag "ajax-loader.gif" %><p>&nbsp;</p></div>
+  </div>
+  <div class="col-xs-12">
+    <hr/>
+    <%= link_to 'Cancel', tasks_path, :class => "btn btn-default"%>
+  &nbsp;&#124;&nbsp;
+    <%= submit_tag 'Save', :id => "snr", :class => "btn btn-primary" %>
+    <hr/>
+  </div>
+
+<% end %>
+
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+                    sideBySide: true,
+                    stepping: 5,
+                    showClose: true
+                });
+    });
+</script>
+
+<script type="text/javascript">
+window.onload = function(){
+document.getElementById('task_take_completed_photo').onchange = function() {
+  if (this.checked){
+    document.getElementById('task_minimum_photos').readOnly = false;
+  }
+  else{
+    document.getElementById('task_minimum_photos').value ="";
+    document.getElementById('task_minimum_photos').readOnly = true;
+    }
+
+};
+
+document.getElementById('task_verify_password').onchange = function() {
+  if(this.checked){
+      document.getElementById('task_password').readOnly = false;
+    }
+  else
+    {
+      document.getElementById('task_password').value = "";
+      document.getElementById('task_password').readOnly = true;
+   }
+};
+
+document.getElementById('task_verify_startime').onchange = function() {
+  if (this.checked){
+    document.getElementById('task_minutes_before').readOnly = false;
+    document.getElementById('task_minutes_after').readOnly =  false;
+    document.getElementById('task_time_before_units').disabled = false;
+    document.getElementById('task_time_after_units').disabled =  false;
+  }
+  else {
+    document.getElementById('task_minutes_before').value = ""
+    document.getElementById('task_minutes_after').value = ""
+    document.getElementById('task_minutes_before').readOnly = true;
+    document.getElementById('task_minutes_after').readOnly =  true; 
+    document.getElementById('task_time_before_units').value = "minutes";
+    document.getElementById('task_time_after_units').value =  "minutes";
+    document.getElementById('task_time_before_units').disabled = true;
+    document.getElementById('task_time_after_units').disabled =  true;
+  }
+};
+
+document.getElementById('task_verify_endtime').onchange = function() {
+  if (this.checked){
+    document.getElementById('task_complete_time_before').readOnly = false;
+    document.getElementById('task_complete_time_after').readOnly = false;
+    document.getElementById('task_complete_time_before_units').disabled = false;
+    document.getElementById('task_complete_time_after_units').disabled =  false;
+  }
+  else{
+    document.getElementById('task_complete_time_before').value = "";
+    document.getElementById('task_complete_time_after').value = "";
+    document.getElementById('task_complete_time_before').readOnly = true;
+    document.getElementById('task_complete_time_after').readOnly = true;
+    document.getElementById('task_complete_time_before_units').value = "minutes";
+    document.getElementById('task_complete_time_after_units').value =  "minutes";
+    document.getElementById('task_complete_time_before_units').disabled = true;
+    document.getElementById('task_complete_time_after_units').disabled =  true;
+  }
+};
+
+}
+</script>
+
+<script type='text/javascript'> 
+jQuery(document).ready(function () {
+document.getElementById("proggif").style.display="none";
+$('#my_helper_lists').hide();
+$('#my_locations').hide();
+$('#task-settings').hide();
+
+var isSearchingHelpers = false;
+$('#cka').click(function(a) {
+  if(!isSearchingHelpers) {
+    isSearchingHelpers = true;
+    jQuery.ajax({
+      url: "<%= get_helpers_path %>",
+      cache: false,
+      success: function(html) { },
+      error: function(jqXHR, textStatus, errorThrown) { },
+      complete: function() { 
+        isSearchingHelpers = false; 
+        }
+
+      });
+  } else {
+    a.preventDefault(); // prevent more clicks until done
+  }
+
+   
+});
+
+var isSearchingLocs = false;
+$('#display_my_locations').click(function(a) {
+
+  if(!isSearchingLocs) {
+      isSearchingLocs = true;
+      jQuery.ajax({
+        url: "<%= display_my_locations_path %>",
+        cache: false,
+        success: function(html) { },
+        error: function(jqXHR, textStatus, errorThrown) { },
+        complete: function() { 
+          isSearchingLocs = false; 
+        }
+
+      });
+   
+  } else {
+      a.preventDefault();
+  }
+   
+});
+
+$('#display_task_settings').click(function() {
+  $('#task-settings').toggle(); 
+});
+
+$('#task_provider_email').bind('focusout', function() {
+  if(!(($('#task_provider_email').val()==null) || ($('#task_provider_email').val()=='')))
+  {
+      jQuery.ajax({
+      url: "<%= check_provider_path %>?email=" + $('#task_provider_email').val(),
+      cache: false,
+      success: function(html) {
+
+         }
+      });
+  }
+ 
+});
+
+});  
+
+</script>
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+  jQuery("#snr").click(function() {
+    document.getElementById("proggif").style.display="block";
+    var input = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "commit").val("Save Now and Return to My Tasks");
+      jQuery('#task').append(jQuery(input));
+  });
+
+});
+</script>
+<script type='text/javascript'> 
+jQuery(document).ready(function () {
+  if(!(($('#task_provider_email').val()==null) || ($('#task_provider_email').val()=='')))
+  {
+    var isCheckingProvider = false;
+    $('#ck').click(function (a) {
+      if(!isCheckingProvider) {
+        isCheckingProvider = true;
+        jQuery.ajax({
+          url: "<%= check_provider_path %>?email=" + $('#task_provider_email').val(),
+          cache: false,
+          success: function(html) { },
+          error: function(jqXHR, textStatus, errorThrown) { },
+          complete: function() { 
+            isCheckingProvider = false; 
+          }
+        });
+        //return false;
+     
+      } else {
+        a.preventDefault();
+      }
+
+    });
+  }
+});  
+</script>
+

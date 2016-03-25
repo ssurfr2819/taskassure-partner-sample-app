@@ -1,0 +1,39 @@
+<div id="header">
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="navbar-brand" style="margin-top:-15px;">
+        <a id="taLogo" title="With TaskAssure" href=""><%= image_tag 'TAPSAlogo250w.png' %></a>
+      </div>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="<%= 'active' if ((request.original_url == root_url) || (request.original_url.include? 'partners')) %>"><a href="<%= root_url %>">Home</a></li>
+        <% if defined?(@current_user) %>
+          <li class="<%= 'active' if (request.original_url.include? tasks_url) %>"><a href="<%= tasks_url %>"><%= Task::TASK_ALIAS.pluralize %></a></li>
+          <li class="<%= 'active' if (request.original_url.include? user_locations_url) %>"><a href="<%= user_locations_url %>"><%= UserLocation::LOCATION_ALIAS.pluralize %></a></li>
+          <li class="<%= 'active' if (request.original_url.include? my_helper_lists_url) %>"><a href="<%= my_helper_lists_url %>"><%= MyHelperList::HELPER_ALIAS.pluralize %></a></li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="row">
+    <% if defined?(@current_user) && !@current_user.nil? %>
+      <div class="col-xs-12 hidden-sm hidden-md hidden-lg">&nbsp;</div>
+      <div class="col-xs-12 col-sm-6"><i>With TaskAssure</i><sup>&reg;</sup></div>
+      <div class="col-xs-12 col-sm-6" align="right" style="color:#777;"><strong>Current user: <%= @current_user[:email] %></strong></div>
+    <% else %>
+      <div class="col-xs-12 hidden-sm hidden-md hidden-lg">&nbsp;</div>
+      <div class="col-xs-12 col-sm-6"><i>With TaskAssure</i><sup>&reg;</sup></div>
+      <div class="col-xs-12" align="right" style="color:#777;"><strong>Current user: </strong>None selected</div>
+    <% end %>
+    </div>
+  </div>
+<!--/.nav-collapse -->
+</div>
+</div>

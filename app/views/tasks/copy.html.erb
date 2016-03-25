@@ -1,0 +1,97 @@
+<%= javascript_include_tag "jquery.validate.min" ,"copyvalidation"%>
+
+<%#= title "Copy Task" %> 
+
+<div class="col-xs-12">
+  <p>Use this tool to create multiple copies of the selected <%= Task::TASK_ALIAS.downcase %><br/>
+  You can create 1 to 4 copies<br/>
+  <strong>(Limit to 4 for testing.)</strong><br/>
+  You can choose the date/time for each copy by selecting the options below</p>
+
+  <h3><%= Task::TASK_ALIAS %>: <%= @task.name %></h3>
+  <% myzone = Timezone::Zone.new :zone => @task.zone if @task.zone %>
+  <p>Current <%= Task::TASK_ALIAS.downcase %> start date/time: <%= @task.local_time_string %> (<%= (@task.zone.nil?)? "Unknown time zone": myzone.active_support_time_zone; %>)</p>
+</div>
+<%= form_tag copy_task_path, :id => "copytask", :method => :post do %>
+
+  <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-2"><%= label_tag "increment", "Increment start time by: " %></div>
+    <div class="col-xs-12 col-sm-3"><%= text_field_tag "increment", 1, :class => "ta-form-widget" %></div>
+    <div class="col-xs-12 col-sm-4"> (Enter 0 or a positive number)</div>
+    <p>&nbsp;</p>
+  </div>
+
+  <div class="col-xs-12">
+    <% [ 'hours', 'days', 'weeks', 'months'].each do |timetype| %>
+    <div class="col-xs-12 col-sm-3 col-md-2">
+  	  <% if timetype == 'days' %>
+        <%= radio_button_tag "timetype", timetype, :checked, :style => "height:1.8em; width:1.8em; vertical-align: middle;" %>
+        <%= label_tag timetype, timetype, :style => "padding-right: 20px;" %>
+      <% else %>
+        <%= radio_button_tag "timetype", timetype, false, :style => "height:1.8em; width:1.8em; vertical-align: middle;" %>
+        <%= label_tag timetype, timetype, :style => "padding-right: 20px;" %>
+      <% end %>
+    </div>
+  	<% end %>
+  </div>
+
+  <div class="clearfix"></div>
+  <div class="col-xs-12"><p>&nbsp;</p></div>
+  
+  <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-2"><%= label_tag "number", "Number of copies to create: " %></div>
+    <div class="col-xs-12 col-sm-3"><%= text_field_tag "number", 1, :class => "ta-form-widget" %> </div>
+    <div class="col-xs-12 col-sm-4"> (Maximum 4) </div>
+    <p>&nbsp;</p>
+  </div>
+
+  <div class="col-xs-12">
+    <%= hidden_field_tag :copyaction %>&nbsp;
+  </div>
+
+  <div class="col-xs-12" align="center">  
+    <div id="proggif"  style="display:none;"><%= image_tag "ajax-loader.gif" %><p>&nbsp;</p></div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6 col-xs-offset-1" align="center">
+      <input name="cancelbutton" type="button" class="btn btn-default" value="Cancel" onclick="updateTxt2()">
+      &nbsp;&nbsp;&#124;&nbsp;&nbsp;
+      <input name="button" type="button" class="btn btn-primary" value="Copy" onclick="updateTxt()">
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+function updateTxt()
+{  
+  var field3 = $("input[name='timetype']:checked").val();
+  var field1 = document.getElementById('number').value;  
+  var field2 = document.getElementById('increment').value;  
+
+  if (parseInt(field1) > 0 && parseInt(field1) <= 4 && parseInt(field2) >= 0 )
+  var a = confirm("Create "+ field1 + " copies of '<%= @task.name %>' with each <%= Task::TASK_ALIAS.downcase %> copy starting " + field2 + " "+field3+ " later?");
+  else{
+    jQuery('#copytask');
+    alert("Please check your inputs");
+  }
+
+
+  if (a){
+    document.getElementById("proggif").style.display="block"
+    document.getElementById("copyaction").value = "copy";
+    document.getElementById("copytask").submit();
+  }
+  else
+    return false;
+
+}  
+</script>
+
+<script type="text/javascript">
+function updateTxt2()
+{  
+  document.getElementById("copyaction").value = "cancel";
+  document.getElementById("copytask").submit();
+}  
+</script>

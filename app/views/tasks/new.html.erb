@@ -1,0 +1,10 @@
+<!--#
+# using form_tag method for new action and form_for method for edit action 
+#
+# due to issues with ActiveResource approach with standard form_for, we separate form for new and edit actions
+# according to dev community, should use Task.build in new action in order to 'get' task attributes
+# for use with form_for, but for us it resulted in error 'first field in form cannot be nil...'
+# 
+# WARNING: until a better technique is created, MUST maintain form_for and form_tag versions!!!
+# -->
+<%= render 'form' %>

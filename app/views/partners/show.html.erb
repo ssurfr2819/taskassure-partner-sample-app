@@ -1,0 +1,44 @@
+<div class="col-xs-12"><h2><%= @page_title = 'Partner Account' %></h2></div>
+<div class="col-xs-8">
+    <h3>Partner Name: '<%= @partner.name %>'</h3>
+</div>
+<div class="col-xs-3" align="right">
+	<%= link_to "Edit", edit_partner_path(@partner), :class => "btn btn-primary" %>
+</div>
+
+
+<div class="clearfix"></div>
+<div class="col-xs-4 col-sm-3 page-label">Email Address:</div>
+<div class="col-xs-6 col-sm-6"><%= @partner.email %></div>
+<% if @partner.email_problem %>
+  <div class="col-xs-10 col-xs-offset-1 ta-alert"><p><strong>ALERT! </strong>An attempt to send account information to this email has failed. Use of the TaskAssure partner API requires valid contact information, including an email address. Please check the address and your email service. If the address is incorrect, please contact us to change it, or use the API like '/api/v3/partner/<%= @partner.id %>/update'. Use of the TaskAssure API by this partner account may be disabled until a valid email is provided.<br/>
+  <strong>Email Problem ID: </strong><%= @partner.email_problem_id %>  (Provide to TaskAssure support to reactivate this email address.)</p></div>
+<% end %>
+
+<div class="clearfix"></div>
+<div class="col-xs-4 col-sm-3 page-label">Phone Number:</div>
+<div class="col-xs-7 col-sm-6"><%= @partner.phone_number  %></div>
+
+<div class="clearfix"></div>
+<div class="col-xs-4 col-sm-3 page-label">Task Alias:</div>
+<div class="col-xs-7 col-sm-6"><i><%= @partner.task_alias.blank? ? "Using default 'Task'" : @partner.task_alias %></i></div>
+
+<div class="clearfix"></div>
+<div class="col-xs-4 col-sm-3 page-label">Helper Alias:</div>
+<div class="col-xs-7 col-sm-6"><i><%= @partner.helper_alias.blank? ? "Using default 'Helper'" : @partner.helper_alias %></i></div>
+
+<div class="clearfix"></div>
+<div class="col-xs-4 col-sm-3 page-label">Location Alias:</div>
+<div class="col-xs-7 col-sm-6"><i><%= @partner.location_alias.blank? ? "Using default 'Location'" : @partner.location_alias %></i></div>
+
+<div class="clearfix"></div>
+<div class="col-xs-4 col-sm-3 page-label">Status:</div>
+<div class="col-xs-7 col-sm-6"><%= @partner.status %></div>
+
+<div class="clearfix"></div>
+<div class="col-xs-12 col-sm-3 page-label">API Key:</div>
+<div class="col-xs-9 col-sm-8 col-md-5" style="font-family:Fixed, monospace;color:#333;background-color:#f0f0f0;"><%= @partner.api_key %></div>
+
+<div class="clearfix"></div>
+<div class="col-xs-12 col-sm-3 page-label">API Secret:</div>
+<div class="col-xs-9 col-sm-8 col-md-5" style="font-family:Fixed, monospace;color:#333;background-color:#f0f0f0;"><%= @partner.api_secret %></div>

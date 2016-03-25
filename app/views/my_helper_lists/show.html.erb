@@ -1,0 +1,63 @@
+<div class="col-xs-12"><h2><%= @page_title = "My #{MyHelperList::HELPER_ALIAS}" %></h2></div>
+<div class="col-xs-12">
+  <h3><%= MyHelperList::HELPER_ALIAS %> Profile</h3>
+  <p>The information in this section is maintained by the <%= MyHelperList::HELPER_ALIAS.downcase %>.</p>
+</div>
+  <div class="col-xs-3 control-label" align="right"><strong><%= MyHelperList::HELPER_ALIAS %> Email:</strong></div>
+  <div class="col-xs-8 ta-form-widget"><%= @my_helper_list.provider_user.email %></div>
+  <div class="clearfix"></div>
+  <div class="col-xs-12">
+    <div id="provider_not_present"></div>
+  </div>
+
+<% if @my_helper_list.provider_user.present? %>
+    <% p = @my_helper_list.provider_user %>
+    <div class="col-xs-3 col-sm-3" align="right"><strong>Name:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.firstname.blank? ? "Name not provided" : p.firstname %></div>
+    <%if p.image_thumb_url.present? %>
+      <div class="col-xs-3 col-sm-3" align="right"><strong>Photo:</strong></div> 
+        <div class="col-xs-9 col-sm-3">
+        <div id="photo"><%= image_tag(p.image_thumb_url) %></div>
+      </div>
+    <% else %>
+        <div class="col-xs-3 col-sm-3" align="right"><strong>Photo:</strong></div> 
+        <div class="col-xs-9 col-sm-3">No photo on record</div>
+    <% end %>
+    <div class="col-xs-3" align="right"><strong>Phone:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.phone_number.blank? ? "Phone not provided" : p.phone_number %></div>
+    <div class="col-xs-3" align="right"><strong>Address:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.address.blank? ? "Address not provided" : p.address %></div>
+    <div class="col-xs-3" align="right"><strong>City:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.city.blank? ? "City not provided" : p.city %></div>
+    <div class="col-xs-3" align="right"><strong>State:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.state.blank? ? "State not provided" : p.state %></div>
+    <div class="col-xs-3" align="right"><strong>Zipcode:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.zipcode.blank? ? "Zipcode not provided" : p.zipcode %></div>
+    <div class="col-xs-3" align="right"><strong>Country:</strong></div>
+    <div class="col-xs-9 col-sm-3"><%= p.country.blank? ? "Country not provided" : p.country %></div>
+<% end %>
+<div class="col-xs-12">
+<h3>My Ratings</h3>
+<p>Rating this <%= MyHelperList::HELPER_ALIAS.downcase %> on a scale of 1 (poor) to 5 (good).</p>
+</div>
+<div class="col-xs-12 col-sm-3">
+<strong>Efficiency:&nbsp;&nbsp;</strong><%= @my_helper_list.efficiency.nil? || @my_helper_list.efficiency == 0 ? "Not rated" : @my_helper_list.efficiency %> 
+</div>
+<div class="col-xs-12 col-sm-3">
+<strong>Timeliness:&nbsp;&nbsp;</strong><%= @my_helper_list.timeliness.nil? || @my_helper_list.timeliness == 0 ? "Not rated" : @my_helper_list.timeliness %> 
+</div>
+<div class="col-xs-12 col-sm-3">
+<strong>Quality:&nbsp;&nbsp;</strong><%= @my_helper_list.quality.nil? || @my_helper_list.quality == 0 ? "Not rated" : @my_helper_list.quality %> 
+</div>
+<div class="col-xs-12 col-sm-3">
+<strong>Overall:&nbsp;&nbsp;</strong><%= @my_helper_list.overall.nil? || @my_helper_list.overall == 0 ? "Not rated" : @my_helper_list.overall %>
+</div>
+
+<div class="col-xs-12">
+<h3>My Comments</h3>
+<%= @my_helper_list.comments.blank? ? "No comments" : @my_helper_list.comments %>
+</div>
+
+<div class="col-xs-12" align="center" style="padding-top:20px;" >
+  <%= link_to "My #{MyHelperList::HELPER_ALIAS.pluralize}", my_helper_lists_path, :class => "btn btn-primary"%>
+</div>

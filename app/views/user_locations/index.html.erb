@@ -1,0 +1,49 @@
+<div class="col-xs-12 col-sm-9 col-md-8"><h2><%= @page_title = "My Saved #{UserLocation::LOCATION_ALIAS.pluralize}" %></h2></div>
+<div class="col-xs-12 col-sm-3 col-md-4" align="right">
+  <%= link_to "Create #{UserLocation::LOCATION_ALIAS}", new_user_location_path, :class => "btn btn-primary" %>
+</div>
+<% if @user_locations.total_count == 0 %>
+  <div class ="col-xs-12"><h3>No saved <%= UserLocation::LOCATION_ALIAS.pluralize %></h3></div>
+<% else %>
+
+  <div class="col-xs-12">
+    <h3><%= UserLocation::LOCATION_ALIAS.pluralize %> (<%= @user_locations.total_count %>)</h3>
+  </div>
+ 
+  <div class="clearfix">
+    <div id="idOfDiv" class="page-pagination">
+      <div class="col-sm-6"><%= page_entries_info @user_locations, :entry_name => "#{UserLocation::LOCATION_ALIAS}" %></div>
+      <div class="col-sm-6" align="right"><%= paginate @user_locations %>&nbsp;&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="hidden-xs hidden-sm col-md-3 col-lg-2 page-label">Name</div>
+  <div class="hidden-xs hidden-sm col-md-3 col-lg-3 page-label">Address</div>
+  <div class="hidden-xs hidden-sm col-md-6 col-lg-5 page-label">City, State/Region, Postal/Zipcode</div>
+  <div class="hidden-xs hidden-sm hidden-md col-lg-2 page-label" align="center">Actions</div>
+  <div class="col-xs-12 page-hr" align="center"><hr/></div>
+
+
+  <% @user_locations.each do |user_location| %>
+    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-2"><%= user_location.name %></div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3"><%= user_location.try(:address).blank? ? "N/A" : user_location.address %></div>
+    <div class="col-xs-12 col-sm-7 col-md-6 col-lg-5"><%= user_location.try(:city).blank? ? "City: N/A" : user_location.city %>,&nbsp;&nbsp;<%= user_location.try(:state).blank? ? "State/Region: N/A" : user_location.state %>,&nbsp;&nbsp;<%= user_location.try(:zipcode).blank? ? "Postal/Zipcode: N/A" : user_location.zipcode %>,&nbsp;&nbsp;<%= user_location.try(:country).blank? ? "Country: N/A" : user_location.country %></div>
+    <div class="col-sm-12 col-lg-2" align="center">
+      <%= link_to 'Show', user_location, :data => {:disable_with => "Loading..."} %>
+      &nbsp;&#124;&nbsp;
+      <%= link_to 'Edit', edit_user_location_path(user_location), :data => {:disable_with => "Loading..."} %>
+      &nbsp;&#124;&nbsp;
+      <%= link_to 'Delete', user_location_path(user_location), :data => {:disable_with => "Deleting...", :confirm => "Delete #{UserLocation::LOCATION_ALIAS} '" + user_location.name + "'? Click OK to delete."}, method: :delete %>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-12 page-thin-hr" align="center"><hr/></div>
+    <div class="clearfix"></div>
+  <% end %>
+
+  <div class="clearfix">
+    <div id="idOfDiv2" class="page-pagination">
+      <div class="col-sm-6"><%= page_entries_info @user_locations, :entry_name => "#{UserLocation::LOCATION_ALIAS}" %></div>
+      <div class="col-sm-6" align="right"><%= paginate @user_locations %>&nbsp;&nbsp;</div>
+    </div>
+  </div>
+<% end %>
